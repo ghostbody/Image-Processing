@@ -81,14 +81,14 @@ if __name__ == "__main__":
     result8 = scale1(im, (500,200))
 
     # # save result
-    result1.save("scale_192*168", "png")
-    result2.save("scale_96*64", "png")
-    result3.save("scale_48*32", "png")
-    result4.save("scale_24*16", "png")
-    result5.save("scale_12*8", "png")
-    result6.save("scale_300*200", "png")
-    result7.save("scale_450*300", "png")
-    result8.save("scale_200*200", "png")
+    result1.save("scale_192*168.png", "png")
+    result2.save("scale_96*64.png", "png")
+    result3.save("scale_48*32.png", "png")
+    result4.save("scale_24*16.png", "png")
+    result5.save("scale_12*8.png", "png")
+    result6.save("scale_300*200.png", "png")
+    result7.save("scale_450*300.png", "png")
+    result8.save("scale_200*200.png", "png")
 
 
     #question 2 quntinization
