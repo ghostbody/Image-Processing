@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from basic import *
 
 def fft2d(img, flags):
     if flags == 1:
@@ -16,14 +17,10 @@ def Ffft2d(img):
 
     for u in xrange(height):
         Fourier_img0[u] = np.array(fft(img[u]))
-        # print "FFT processing Row %d" % u
 
     Fourier_img = np.zeros((height,width),np.complex256)
     for v in xrange(width):
         Fourier_img[:,v] = fft(Fourier_img0[:,v])
-        # print "FFT processing COL %d" % v
-
-    # np.transpose(Fourier_img)
 
     return Fourier_img
 
@@ -33,7 +30,6 @@ def fft(x):
         return x
     elif N % 2 != 0:
         return DFT_slow(x)
-        print "slow DFT applied"
     else:
         even = fft(x[::2])
         odd = fft(x[1::2])
@@ -49,70 +45,26 @@ def DFT_slow(x):
 
     return Fourier_img
 
+def Fourier_Spectrum():
+    img = cv2.imread("./14.png", 0)
+    img = centralize(img)
+    Fourier_img = fft2d(img, 1)
+    Fourier_img = np.abs(Fourier_img)
+    Fourier_img = Fourier_log(Fourier_img)
+    Fourier_img = Fourier_scaling(Fourier_img, "linear")
+    cv2.imwrite("FFourier.png", Fourier_img)
 
-def Fourier_log(img):
-    height = len(img)
-    width = len(img[0])
-
-    Fourier_log_img = np.zeros((height,width), np.float64)
-
-    for u in xrange(height):
-        for v in xrange(width):
-            if img[u, v] > 0:
-                Fourier_log_img[u, v] = np.log(img[u, v])
-
-    return Fourier_log_img
-
-def Fourier_scaling(img):
-    height = len(img)
-    width = len(img[0])
-    res_img = np.zeros((height,width),np.int32)
-
-    max_pixel = np.amax(img)
-    min_pixel = np.amin(img)
-
-    print max_pixel, min_pixel
-
-    contantC = 255.0 / np.log10(256)
-
-    for u in xrange(height):
-        for v in xrange(width):
-            res_img[u, v] = int((img[u, v] - min_pixel) / (max_pixel - min_pixel) * 255)
-            #res_img[u, v] = int(contantC * np.log10(1 + np.abs(float(255*img[u, v]) / max_pixel)))
-            if res_img[u, v] > 255:
-                res_img[u, v] = 255
-
-    return res_img
-
-def centralize(img):
-    height = len(img)
-    width = len(img[0])
-
-    res_img = np.zeros((height,width),np.float64)
-
-    for x in xrange(height):
-        for y in xrange(width):
-            if (x + y) % 2 != 0:
-                res_img[x, y] = -1 * img[x, y]
-            else:
-                res_img[x, y] = img[x,y]
-
-    return res_img
+def Fourier_Inverse():
+    img = cv2.imread("./14.png", 0)
+    Fourier_img = fft2d(img, 1)
+    origin_img = fft2d(Fourier_img, -1).real
+    origin_img = Fourier_scaling(origin_img, "linear")
+    origin_img = diolog_transform(origin_img)
+    cv2.imwrite("FInverseFourier.png", origin_img)
 
 def main():
-    img = cv2.imread("./14.png", 0)
-    # centered_img = centralize(img)
-    # FFourier_img = fft2d(centered_img, 1)
-    # FFourier_img = np.abs(FFourier_img)
-    # FFourier_img = Fourier_log(FFourier_img)
-    # FFourier_img = Fourier_scaling(FFourier_img)
-    # cv2.imwrite("FFourier_test.png", FFourier_img)
-    FFourier_img = fft2d(img, 1)
-    origin_img = fft2d(FFourier_img, -1)
-    origin_img = np.abs(origin_img)
-    origin_img = Fourier_scaling(origin_img)
-    origin_img = diolog_transform(origin_img)
-    cv2.imwrite("IFFourier_img.png", origin_img)
+    Fourier_Spectrum()
+    Fourier_Inverse()
 
 if __name__ == "__main__":
     main()

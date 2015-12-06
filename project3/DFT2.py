@@ -21,7 +21,6 @@ def Fdft2d(img):
         for v in xrange(width):
             for y in xrange(width):
                 Fourier_img0[u, v] += img[u,y] * (np.exp(-1j*2*np.pi*(float(v*y)/width)))
-            print "ROW", Fourier_img0[u,v], u * height + v
 
     Fourier_img = np.zeros((height,width),np.complex256)
 
@@ -30,7 +29,6 @@ def Fdft2d(img):
         for v in xrange(width):
             for x in xrange(height):
                 Fourier_img[u, v] += Fourier_img0[x, v] * (np.exp(-1j*2*np.pi*(float(u*x)/height)))
-            print "COL", Fourier_img[u,v], u * height + v
 
     return Fourier_img
 
@@ -40,7 +38,7 @@ def Fourier_Spectrum():
     Fourier_img = dft2d(img, 1)
     Fourier_img = np.abs(Fourier_img)
     Fourier_img = Fourier_log(Fourier_img)
-    origin_img = Fourier_scaling(origin_img, "linear")
+    Fourier_img = Fourier_scaling(Fourier_img, "linear")
     cv2.imwrite("Fourier.png", Fourier_img)
 
 def Fourier_Inverse():

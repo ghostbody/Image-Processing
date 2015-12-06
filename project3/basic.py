@@ -20,10 +20,7 @@ def Fourier_scaling(img, method="linear"):
 
     max_pixel = np.amax(img)
     min_pixel = np.amin(img)
-
-    print max_pixel, min_pixel
-
-    contantC = 255.0 / np.log10(256)
+    contantC = 255 / np.log10(256)
 
     for u in xrange(height):
         for v in xrange(width):
@@ -31,6 +28,7 @@ def Fourier_scaling(img, method="linear"):
                 res_img[u, v] = int((img[u, v] - min_pixel) / (max_pixel - min_pixel) * 255)
             elif method == "log":
                 res_img[u, v] = int(contantC * np.log10(1 + np.abs(float(255*img[u, v]) / max_pixel)))
+
     return res_img
 
 def centralize(img):
@@ -73,7 +71,9 @@ def gama_correction(img, scale):
 
     for i in range(height):
         for j in range(width):
-            # print img[i, j]
-            new_img[i, j] = int(table[img[i,j]])
+            if new_img[i, j] < 255:
+                new_img[i, j] = int(table[img[i,j]])
+            else:
+                new_img[i, j] = int(table[255])
 
     return new_img
