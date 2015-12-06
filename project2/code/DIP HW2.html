@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIP HW2</title>
+<link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body><div class="container"><h2 id="hw2-histogram-and-spatial-filtering">HW2: Histogram and Spatial Filtering</h2>
+
+
+
+<h3 id="13331314-叶嘉祺">13331314 叶嘉祺</h3>
+
+<p><strong>1.1 Histogram Equalization (15 Points)</strong> <br>
+<strong>Suppose that you have performed histogram equalization on a digital image. Will a second pass of histogram equalization (on the histogram-equalized image) produce exactly the same result as the first pass?Prove your answer.</strong> <br>
+It is equivalent to all of the same number of pixels on the gray level, no matter how many times you have a number of histogram equalization, he has not changed. <br>
+Prove: <br>
+Assume that the first pass of histogram equalization result in gray level s. <br>
+<script type="math/tex; mode=display" id="MathJax-Element-1">
+s =T_1(r) =  \int_0^r p_r(\omega)d\omega\  ,  0\leq r \leq 1
+</script></p>
+
+
+
+<p><script type="math/tex; mode=display" id="MathJax-Element-2">
+P_s(s) = \frac{d T(r)}{ ds} = \frac{d T(r)}{ dr} \cdot \frac{d r}{ ds} 
+</script></p>
+
+
+
+<p><script type="math/tex; mode=display" id="MathJax-Element-3">
+= \frac{d T_1(r)}{ d r} \cdot \frac{dr}{ds} = p_r(r) \cdot \frac{1}{p_r(r)} = 1
+</script> <br>
+assume that the first pass of histogram equalization result in gray level t. <br>
+<script type="math/tex; mode=display" id="MathJax-Element-4">
+t = T_2(s) = \int_0^s p_s(\omega)d\omega\ ,  0\leq s \leq 1
+</script></p>
+
+<p>In the same way,</p>
+
+
+
+<p><script type="math/tex; mode=display" id="MathJax-Element-80">
+p_t(t) = P_s(s) \cdot \frac{ds}{dt} = 1,0\leq t \leq 1 
+</script></p>
+
+<p>To sum up，a second pass of histogram equalization produce exactly the same result as the first pass.</p>
+
+<p><strong>1.2 Spatial Filtering (20 Points)</strong> <br>
+<strong>Consider a 4 × 4 gray image and a 3 × 3 filter:</strong> <br>
+Image : <br>
+<script type="math/tex; mode=display" id="MathJax-Element-81">
+  \begin{matrix}
+   85 & 13 & 29 & 83 \\
+   169 & 8 & 243 & 28 \\
+   17 & 155 & 27 & 33 \\
+   91 & 25 &173 & 79
+  \end{matrix} 
+</script> <br>
+Filter : <br>
+<script type="math/tex; mode=display" id="MathJax-Element-82">
+  \begin{matrix}
+1 & 1 & 1 \\
+0 & 0 & 0 \\
+-1 & -1 & -1 \\
+  \end{matrix}
+</script></p>
+
+<p><strong>1. Convolve the gray image with the given filter with zero-padding, and show your result (whose size should be 4 × 4). (7 Points)</strong> <br>
+  <script type="math/tex; mode=display" id="MathJax-Element-83">\begin{matrix}
+   -177& -420 & -279 & -271 \\
+   -74 & -72 & -90 & 52 \\
+   61 & 131 & 2 & 19 \\
+   172 & 199 &1215 & 60
+  \end{matrix}</script> </p>
+
+<p><strong>2. Discuss the meanings of positive values and negative values in your convolution result respectively. (8 Points)</strong> <br>
+Negative values indicates that, the new gray value is very small and it may not be the border image. <br>
+Positive values indicates that, the new gray value is very big and may be bigger than a average, and it could be the border image.</p>
+
+<p><strong>3. Describe some applications of the given filter based on your own knowledge. (5 Points)</strong> <br>
+This spatial filter can be used for edge detection, remove the part of the pseudo edge, make a smooth effect for the noise.</p>
+
+<h3 id="programming">Programming</h3>
+
+<p><strong>2.2 Histogram Equalization (35 Points)</strong> <br>
+<strong>Write a function that applies histogram equalization on a gray scale image. The function prototype is “equalize hist(input img) → output img”, returning a gray scale image whose histogram is approximately flat. You can modify the prototype if necessary. For the report, please load your input image and use your program to:</strong></p>
+
+<p><strong>1. Compute and display its histogram. Manually paste the histogram on your report. Note:You must compute the histogram by yourself, but existing APIs can be used for display. (5 Points)</strong> <br>
+<img src="https://github.com/ghostbody/Image-Processing/blob/master/project2/originHist.png?raw=true" alt="hist" title=""></p>
+
+<p><strong>2. Equalize its histogram. Paste the histogram-equalized result and the corresponding histogram on your report. (10 Points)</strong> <br>
+<img src="https://github.com/ghostbody/Image-Processing/blob/master/project2/newHist.png?raw=true" alt="histout" title=""></p>
+
+<p><img src="https://github.com/ghostbody/Image-Processing/blob/master/project2/outImage.png?raw=true" alt="imageout" title=""></p>
+
+<p><strong>3. Analyze your histogram-equalized result in less than 1 page. (8 Points)</strong> <br>
+The result in fact looks better than the origin one.  <br>
+By this method, the brightness can be better distributed on the histogram. This can be used to enhance the contrast of the contrast without affecting the overall contrast, histogram equalization by effectively expanding the common brightness to achieve this function. <br>
+Let’s put the origin image and the output image together. <br>
+<img src="https://github.com/ghostbody/Image-Processing/blob/master/project2/outImage.png?raw=true" alt="imageout" title=""> <br>
+<img src="https://github.com/ghostbody/Image-Processing/blob/master/project2/14.png?raw=true" alt="orgin" title=""></p>
+
+<p>It strongly shows that the first image is much better than the second one since after the histogram equalization processing, the original relatively small pixel gray level will be allocated to other gray, the pixel is relatively concentrated, after processing gray range, contrast, large, clarity, so can effectively enhance the image. <br>
+Histogram equalization is a method to adjust the contrast in the field of image processing. This method is usually used to increase the local contrast of many images, especially when the contrast of the useful data of the image is very close. By this method, the brightness can be better distributed on the histogram. This can be used to enhance the contrast of the contrast without affecting the overall contrast, histogram equalization by effectively expanding the common brightness to achieve this function.</p>
+
+<p><strong>4. Detailedly discuss how you implement the histogram equalization operation, i.e., the “equal-ize hist” function, in less than 2 pages. Please focus on the algorithm part. Don’t widely copy/paste your codes in the report, since your codes are also submitted. (12 Points)</strong> <br>
+The target to get a histogram equalization is the same to get a corresponding relation between <code>gray_value_old</code> and <code>gray_value_new</code>.</p>
+
+<p>The core algorithm of histogram equalization is to calculate such a table(array) for the image. <br>
+<script type="math/tex; mode=display" id="MathJax-Element-75">
+s =T(r) =  \sum_0^r p_r(i)  ,  0\leq r \leq 255
+</script></p>
+
+<pre class="prettyprint"><code class="language-python hljs ">fx[i] = <span class="hljs-number">255</span> * sum([hist[j] <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(i+<span class="hljs-number">1</span>)]) / (width * height)</code></pre>
+
+<p>Note that <code>fx</code>indicates the corresponding relation table(array) for the origin image. And sum is function to calculate the formula above.</p>
+
+<p>And also note that I implicitly do a scaling in the calculating.</p>
+
+<p>Next it’s very easy, just traverse the array and then assign the table value for the new image.</p>
+
+
+
+<pre class="prettyprint"><code class="language-python hljs ">new_img[x, y] = fx[old_img[x, y]]</code></pre>
+
+<p>Happily , we got the histogram equalization result and then we can draw the histogram again and the result.</p>
+
+<p><strong>2.3 Spatial Filtering (30 Points)</strong> <br>
+<strong>Write a function that performs spatial filtering on a gray scale image. The function prototype is “filter2d(input img, filter) → output img”, where “filter” is the given filter. Modify the prototype if necessary.For the report, please load your input image and use your “filter2d” function to:</strong> <br>
+<strong>1. Smooth your input image with 3 × 3, 7 × 7 and 11 × 11 averaging filters respectively. Paste your three results on the report. (9 Points)</strong> <br>
+3*3 <br>
+<img src="https://github.com/ghostbody/Image-Processing/blob/master/project2/Image1.png?raw=true" alt="image1" title=""></p>
+
+<p>7*7 <br>
+<img src="https://github.com/ghostbody/Image-Processing/blob/master/project2/Image2.png?raw=true" alt="image2" title=""></p>
+
+<p>11*11 <br>
+<img src="https://github.com/ghostbody/Image-Processing/blob/master/project2/Image3.png?raw=true" alt="image3" title=""></p>
+
+<p><strong>22. Sharpen your input image with a 3 × 3 Laplacian filter (There are four variants of Laplacian in Fig. 3.37 of the textbook. Pick any one you like.) and then paste the result. In addition, briefly discuss why Laplacian filter can be used for sharpening. (6 Points)</strong> <br>
+sharpen result. <br>
+<img src="https://github.com/ghostbody/Image-Processing/blob/master/project2/Image4.png?raw=true" alt="result" title=""> <br>
+The function of image sharpening is to make the gray contrast enhanced, so that the fuzzy image becomes more clear. The essence of the image is that the image is subjected to an average operation or an integral operation, so it can be carried out on the inverse operation, such as differential operation can highlight the image details, so that the image becomes more clear.  <br>
+<script type="math/tex; mode=display" id="MathJax-Element-382">
+  \begin{matrix}
+1 & 1 & 1 \\
+1 & -8 & 1 \\
+1 & 1 & 1 \\
+  \end{matrix}
+</script> <br>
+Since Laplasse is a differential operator, it is applied to enhance the gray level of the image in the region, and weaken the slow change of gray area. Therefore, the sharpening processing can choose the original image of the Laplasse operator to deal with the original image, and then the Laplasse image and the original image superimposed to produce a sharpening image. <br>
+<script type="math/tex; mode=display" id="MathJax-Element-383">
+\nabla f^2 = [f(x+1, y) + f(x-1, y) + f(x, y+1) + f(x, y-1) + f(x+1, y+1)+f(x+1, y-1)+f(x-1, y+1)+f(x-1,y-1)] - 8f(x)
+</script></p>
+
+<p><strong>3. Perform high-boost filtering (i.e., g(x, y) = f (x, y) + k ∗ g mask (x, y), see Eq. (3.6-9) of the textbook for other details) on your input image. The averaging part of the process should be done using the filter in Fig. 3.32(a) of the textbook. Choose a k (the weight in Eq. (3.6-9)) as you see fit. Write down the selected k and paste your result on the report. (5 Points)</strong> <br>
+k = 0.8 <br>
+<img src="https://github.com/ghostbody/Image-Processing/blob/master/project2/Image5.png?raw=true" alt="image5" title=""></p>
+
+<p><strong>4. Detailedly discuss how you implement the spatial filtering operation, i.e., the “filter2d” function, in less than 2 pages. (10 Points)</strong></p>
+
+<p>For a selected filter and a selected pixel, we need to calculate the as  we  want the convolution result of the image. We defined a function to calculate the gray value for the exactly one pixel.</p>
+
+
+
+<pre class="prettyprint"><code class="language-python hljs ">   Convolution(x, y, filter) → new_gray_value</code></pre>
+
+
+
+<pre class="prettyprint"><code class="language-python hljs "><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">convolution</span><span class="hljs-params">(arguments)</span>:</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(filter_size):
+        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(filter_size):
+            <span class="hljs-keyword">if</span> out_of_range:
+             center_value += <span class="hljs-number">0</span>
+            <span class="hljs-keyword">else</span>:
+             center_value += filter[i][j]*image_p
+    center_value /= filter_size*filter_size</code></pre>
+
+<p>Then we can calculate the center_value for one pixel in the origin image. Then we can have a nested for loop to calculate the whole image.</p>
+
+<pre class="prettyprint"><code class="language-python hljs "><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">filter2d</span><span class="hljs-params">(arguments)</span>:</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(height):
+        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(width):
+          new_image[i,j] = 
+            convolution(i,j, filter)</code></pre>
+
+<p>Notice that, when I am doing laplacian_filter, the result is very wired.  As a result, we need to compelete scaling after operation. What’s more, I did a gama correction as wil to have a better view.  <br>
+scaling method: <br>
+<script type="math/tex; mode=display" id="MathJax-Element-439">
+    s =|S(x,y)| = | \frac {f(x,y) - min(f(x,y))}{max(f(x,y))-min(f(x,y))}| × 255
+</script></p>
+
+<p>I use the same method in histogram equalization that to set up a table for gama function.</p>
+
+
+
+<pre class="prettyprint"><code class="language-python hljs ">    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">256</span>):
+        val = pow(float(i)/<span class="hljs-number">255.0</span> ,scale) * <span class="hljs-number">255.0</span>
+        <span class="hljs-keyword">if</span> val&gt;<span class="hljs-number">255</span>:    
+                val = <span class="hljs-number">255</span>    
+        <span class="hljs-keyword">elif</span> val&lt;<span class="hljs-number">0</span>:  
+                val = <span class="hljs-number">0</span>  
+        table[i]= val</code></pre>
+
+<p>I meet a problem when using the laplacian method. The noise of the image is also enhanced. <br>
+So I adjust the method with: <br>
+<script type="math/tex; mode=display" id="MathJax-Element-469">
+	g = G(x,y) = k*f(x,y) + L(x,y)
+</script></p>
+
+<p>For high_boost_filtering: <br>
+First we should calculate the Fuzzy image:</p>
+
+<pre class="prettyprint"><code class="language-python hljs ">    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(height):
+        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(width):
+            sub_img[i ,j] = img[i, j][<span class="hljs-number">0</span>] - fuzzy_img[i][j]</code></pre>
+
+<p>And we get the mask <code>sub_img</code>, and then we calculate the output image:</p>
+
+
+
+<pre class="prettyprint"><code class="language-python hljs ">    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(height):
+        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(width):
+            enhanced_img[i, j] = img[i, j][<span class="hljs-number">0</span>] + k * sub_img[i][j]</code></pre>
+
+<p>And then we get the enhanced_img by doing the formula. <br>
+<script type="math/tex; mode=display" id="MathJax-Element-477">
+g(x, y) = f (x, y) + k ∗ g_m(x, y)
+</script></p></div></body>
+</html>
