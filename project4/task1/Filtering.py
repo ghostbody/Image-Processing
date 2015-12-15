@@ -29,7 +29,6 @@ def mean_filter(img, img_filter, x, y, method):
         centre_gray_value2 = Convolution(img, img_filter, x, y, method, 1.5)
 
         if centre_gray_value2 != 0:
-            print int(float(centre_gray_value1) / centre_gray_value2)
             return int(float(centre_gray_value1) / centre_gray_value2)
         else:
             return 0
@@ -56,14 +55,12 @@ def  Convolution(img, img_filter, x, y, method, q=1):
                 centre_gray_value += (img[img_x, img_y] * img_filter[i][j])
             elif method == "harmonic":
                 if img[img_x, img_y] == 0:
-                    centre_gray_value += 0
+                    centre_gray_value += 1
                 else:
                     centre_gray_value += 1.0 / (img[img_x, img_y] * img_filter[i][j])
             elif method == "contraharmonic":
-                if img[img_x, img_y] == 0 and q == 0:
+                if img[img_x, img_y] == 0:
                     centre_gray_value += 1
-                elif img[img_x, img_y] == 0:
-                    centre_gray_value += 0
                 else:
                     centre_gray_value += (img[img_x, img_y] * img_filter[i][j]) ** q
 
@@ -100,8 +97,8 @@ def contraharmonic(img):
 def main():
         img = cv2.imread("./task_1.png", 0)
         # arithmetic(img);
-        # harmonic(img);
-        contraharmonic(img);
+        harmonic(img);
+        # contraharmonic(img);
 
 
 if __name__ == '__main__':
