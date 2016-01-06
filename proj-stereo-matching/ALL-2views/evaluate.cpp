@@ -1,0 +1,51 @@
+#include "opencv2/core/core.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <stdio.h>
+#include <cmath>
+
+using namespace std;
+using namespace cv;
+
+double CalculateDisparityErrorOne(int, int);
+
+double CalculateDisparityErrorPercent(const Mat & DisparityMap, const Mat & GroudTruth) {
+  int sum = 0;
+  for(int i = 0; i < GroudTruth.rows; i++) {
+    for(int j = 0; j < GroudTruth.cols; j++) {
+      int GroudTruthVal = GroudTruth.at<int>(i, j);
+      int DisparityMapVal = DisparityMap.at<int>(i, j);
+      if(GroudTruthVal == 0) {
+        continue;
+      }
+      double error = CalculateDisparityErrorOne(DisparityMapVal, GroudTruthVal);
+      if(error > 1) {
+        sum++;
+      }
+    }
+  }
+  return ((double)sum) / (GroudTruth.rows * GroudTruth.cols) * 100;
+}
+
+double CalculateDisparityErrorOne(int DisparityMapVal,
+                                    int GroudTruthVal) {
+  double res = (double)(DisparityMapVal - GroudTruthVal) / GroudTruthVal;
+  return res > 0 ? res : -res;
+}
+
+int main(int argc, char const *argv[]) {
+  Mat GroudTruth, DisparityMap;
+  GroudTruth = imread(argv[1], 0);
+  DisparityMap = imread(argv[2], 0);
+  const char * name = argv[3];
+
+  if(GroudTruth.empty() || DisparityMap.empty()){
+    printf("usage: $eval_pro$ GroudTruthImage DisparityMap \n");
+    return -1;
+  }
+
+  printf("[%s]the percentage of bad pixels: %lf\n", name, CalculateDisparityErrorPercent(DisparityMap, GroudTruth));
+  return 0;
+}

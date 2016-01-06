@@ -1,0 +1,51 @@
+g++ `pkg-config --cflags opencv` stero.cpp -g -o stero `pkg-config --libs opencv` 
+./stero
+usage: $stero_pro$ LeftImage RightImage [DisparitySide]
+DisparitySide: left for default, left|right for options
+makefile:2: recipe for target 'test' failed
+[Midd1]the percentage of bad pixels: 22.940424
+[Midd1]the percentage of bad pixels: 23.272305
+[Lampshade1]the percentage of bad pixels: 19.868298
+[Lampshade1]the percentage of bad pixels: 19.046252
+[Wood2]the percentage of bad pixels: 23.963343
+[Wood2]the percentage of bad pixels: 23.474371
+[Rocks2]the percentage of bad pixels: 12.294436
+[Rocks2]the percentage of bad pixels: 11.804134
+[Aloe]the percentage of bad pixels: 9.831635
+[Aloe]the percentage of bad pixels: 10.889930
+usage: $eval_pro$ GroudTruthImage DisparityMap 
+usage: $eval_pro$ GroudTruthImage DisparityMap 
+[Flowerpots]the percentage of bad pixels: 7.793308
+[Flowerpots]the percentage of bad pixels: 10.090915
+[Plastic]the percentage of bad pixels: 40.769919
+[Plastic]the percentage of bad pixels: 38.287010
+[Baby1]the percentage of bad pixels: 15.716249
+[Baby1]the percentage of bad pixels: 14.609646
+[Cloth4]the percentage of bad pixels: 12.625928
+[Cloth4]the percentage of bad pixels: 13.288808
+[Cloth1]the percentage of bad pixels: 9.039471
+[Cloth1]the percentage of bad pixels: 8.145052
+[Baby2]the percentage of bad pixels: 13.355801
+[Baby2]the percentage of bad pixels: 15.431582
+[Bowling2]the percentage of bad pixels: 13.219450
+[Bowling2]the percentage of bad pixels: 13.259106
+[Midd2]the percentage of bad pixels: 22.868429
+[Midd2]the percentage of bad pixels: 23.621028
+[Rocks1]the percentage of bad pixels: 27.612719
+[Rocks1]the percentage of bad pixels: 19.605087
+usage: $eval_pro$ GroudTruthImage DisparityMap 
+usage: $eval_pro$ GroudTruthImage DisparityMap 
+[Wood1]the percentage of bad pixels: 23.630611
+[Wood1]the percentage of bad pixels: 24.714058
+[Monopoly]the percentage of bad pixels: 29.944482
+[Monopoly]the percentage of bad pixels: 31.403209
+[Lampshade2]the percentage of bad pixels: 26.692466
+[Lampshade2]the percentage of bad pixels: 24.157044
+[Baby3]the percentage of bad pixels: 24.220422
+[Baby3]the percentage of bad pixels: 24.041066
+[Cloth3]the percentage of bad pixels: 15.185689
+[Cloth3]the percentage of bad pixels: 19.808153
+[Bowling1]the percentage of bad pixels: 25.157172
+[Bowling1]the percentage of bad pixels: 22.971677
+[Cloth2]the percentage of bad pixels: 26.858498
+[Cloth2]the percentage of bad pixels: 23.137757
