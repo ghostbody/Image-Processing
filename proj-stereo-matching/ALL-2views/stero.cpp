@@ -8,12 +8,13 @@
 using namespace std;
 using namespace cv;
 
-#define PATCH_H 5
-#define PATCH_W 5
+#define PATCH_H 7
+#define PATCH_W 7
 #define DISTANCE 79
 
 Mat CalculateDisparityAll(const Mat & LeftImage, const Mat & RightImage, int falg);
-int CalculateMinDist(const Mat & LeftImage, const Mat & RightImage, int x, int y, int flag);
+int CalculateMinDistSum(const Mat & LeftImage, const Mat & RightImage, int x, int y, int flag);
+int CalculateMinDistNCC(const Mat & LeftImage, const Mat & RightImage, int x, int y, int flag);
 Mat CalculateCenterPatch(const Mat & M, int x, int y);
 int CalculateDisparitySumOne(const Mat & P, const Mat &Q);
 int CalculateDisparityNCC(const Mat & P, const Mat & Q);
@@ -22,23 +23,22 @@ Mat CalculateDisparityAll(const Mat & LeftImage, const Mat & RightImage, int fla
   Mat res(LeftImage.size(), CV_32S);
   for(int i = 0; i < LeftImage.rows; i++) {
     for(int j = 0; j < LeftImage.cols; j++) {
-      int tempDisparityDistance = CalculateMinDist(LeftImage, RightImage, i, j, flag);
+      int tempDisparityDistance = CalculateMinDistSum(LeftImage, RightImage, i, j, flag);
       res.at<int>(i, j) = tempDisparityDistance * 3;
-      // printf("(%d,%d):%d, %d\n", i, j, tempDisparityDistance, res.at<int>(i, j));
+      //printf("(%d,%d):%d, %d\n", i, j, tempDisparityDistance, res.at<int>(i, j));
     }
   }
   return res;
 }
 
-int CalculateMinDist(const Mat & LeftImage, const Mat & RightImage, int x, int y, int flag) {
+int CalculateMinDistSum(const Mat & LeftImage, const Mat & RightImage, int x, int y, int flag) {
   int min_index = y;
   int min;
   if(flag == 1) {
     Mat PatchP = CalculateCenterPatch(LeftImage, x, y);
-    for(int i = y; i < RightImage.cols && i < y + DISTANCE ; i++) {
+    for(int i = y; i < RightImage.cols  && i < y + DISTANCE; i++) {
       Mat PatchQ = CalculateCenterPatch(RightImage, x, i);
-      // int disparity = CalculateDisparitySumOne(PatchP, PatchQ);
-      int disparity = CalculateDisparityNCC(PatchP, PatchQ);
+      int disparity = CalculateDisparitySumOne(PatchP, PatchQ);
       if(min > disparity || i == y) {
         min = disparity;
         min_index = i;
@@ -46,18 +46,47 @@ int CalculateMinDist(const Mat & LeftImage, const Mat & RightImage, int x, int y
     }
   } else if(flag == 0) {
     Mat PatchP = CalculateCenterPatch(RightImage, x, y);
-    for(int i = y; i >= 0 && i > y - DISTANCE ; i--) {
+    for(int i = y; i >= 0 && i >= y - DISTANCE ; i--) {
       Mat PatchQ = CalculateCenterPatch(LeftImage, x, i);
-      // int disparity = CalculateDisparitySumOne(PatchP, PatchQ);
-      int disparity = CalculateDisparityNCC(PatchP, PatchQ);
+      int disparity = CalculateDisparitySumOne(PatchP, PatchQ);
       if(min > disparity || i == y) {
         min = disparity;
         min_index = i;
       }
     }
   }
+  // return d
   return min_index - y > 0 ? min_index - y : y - min_index;
 }
+
+int CalculateMinDistNCC(const Mat & LeftImage, const Mat & RightImage, int x, int y, int flag) {
+    int max_index = y;
+    int max;
+    if(flag == 1) {
+      Mat PatchP = CalculateCenterPatch(LeftImage, x, y);
+      for(int i = y; i < RightImage.cols && i < y + DISTANCE; i++) {
+        Mat PatchQ = CalculateCenterPatch(RightImage, x, i);
+        int disparity = CalculateDisparityNCC(PatchP, PatchQ);
+        if(max < disparity || i == y) {
+          max = disparity;
+          max_index = i;
+        }
+      }
+    } else if(flag == 0) {
+      Mat PatchP = CalculateCenterPatch(RightImage, x, y);
+      for(int i = y; i >= 0 && i >= y - DISTANCE; i--) {
+        Mat PatchQ = CalculateCenterPatch(LeftImage, x, i);
+        int disparity = CalculateDisparityNCC(PatchP, PatchQ);
+        if(max < disparity || i == y) {
+          max = disparity;
+          max_index = i;
+        }
+      }
+    }
+    // return d
+    return max_index - y > 0 ? max_index - y : y - max_index;
+}
+
 
 Mat CalculateCenterPatch(const Mat & M, int x, int y) {
   // Mat res(PATCH_H, PATCH_W, M.type());
@@ -68,7 +97,7 @@ Mat CalculateCenterPatch(const Mat & M, int x, int y) {
            || x - PATCH_H/2 + i >=  M.rows || y - PATCH_W/2 + j >= M.cols) {
         res.at<int>(i,j) = 0;
       } else {
-        res.at<int>(i,j) = M.at<uchar>(x - PATCH_H/2 + i, y - PATCH_W/2 + j);
+        res.at<int>(i,j) = M.at<int>(x - PATCH_H/2 + i, y - PATCH_W/2 + j);
       }
     }
   }
@@ -125,7 +154,8 @@ int CalculateDisparityNCC(const Mat & P, const Mat & Q) {
     }
   }
 
-  return sum / (P.rows * P.cols);
+  int res = (int)(sum);
+  return res > 0 ? res : - res;
 }
 
 Mat & scalling(Mat & M) {
@@ -158,6 +188,17 @@ Mat & scalling(Mat & M) {
   return M;
 }
 
+Mat addConstant(double constant, const Mat & M) {
+    Mat res(M.size(), CV_32S);
+    for(int i = 0; i < M.rows; i++) {
+        for(int j = 0; j < M.cols; j++) {
+            res.at<int>(i, j) = M.at<uchar>(i, j) * constant;
+        }
+    }
+
+    return res;
+}
+
 void help() {
   printf("usage: $stero_pro$ LeftImage RightImage [DisparitySide]\n");
   printf("DisparitySide: left for default, left|right for options\n");
@@ -182,10 +223,11 @@ int main(int argc, char ** argv) {
   if(strcmp(argv[3], "right") == 0) {
     side = 1;
   }
+  LeftImage = addConstant(1, LeftImage);
+  RightImage = addConstant(10, RightImage);
 
   printf("processing...\n");
   Mat resImage = CalculateDisparityAll(RightImage, LeftImage, side);
-
 
   if(side == 1) {
     imwrite("Right.png", resImage);
