@@ -11,17 +11,19 @@ using namespace cv;
 
 double CalculateDisparityErrorOne(int, int);
 
+#define BORDER 10
+
 double CalculateDisparityErrorPercent(const Mat & DisparityMap, const Mat & GroudTruth) {
   int sum = 0;
-  for(int i = 0; i < GroudTruth.rows; i++) {
-    for(int j = 0; j < GroudTruth.cols; j++) {
+  for(int i = BORDER; i < GroudTruth.rows - BORDER; i++) {
+    for(int j = BORDER; j < GroudTruth.cols - BORDER; j++) {
       int GroudTruthVal = GroudTruth.at<int>(i, j);
       int DisparityMapVal = DisparityMap.at<int>(i, j);
       if(GroudTruthVal == 0) {
         continue;
       }
       double error = CalculateDisparityErrorOne(DisparityMapVal, GroudTruthVal);
-      if(error > 1) {
+      if(error > 2.55) {
         sum++;
       }
     }
@@ -31,7 +33,7 @@ double CalculateDisparityErrorPercent(const Mat & DisparityMap, const Mat & Grou
 
 double CalculateDisparityErrorOne(int DisparityMapVal,
                                     int GroudTruthVal) {
-  double res = (double)(DisparityMapVal - GroudTruthVal) / GroudTruthVal;
+  double res = DisparityMapVal - GroudTruthVal;
   return res > 0 ? res : -res;
 }
 
@@ -42,10 +44,10 @@ int main(int argc, char const *argv[]) {
   const char * name = argv[3];
 
   if(GroudTruth.empty() || DisparityMap.empty()){
-    printf("usage: $eval_pro$ GroudTruthImage DisparityMap \n");
+    printf("usage: $eval_pro$ GroudTruthImage DisparityMap %s\n", name);
     return -1;
   }
 
-  printf("[%s]the percentage of bad pixels: %lf\n", name, CalculateDisparityErrorPercent(DisparityMap, GroudTruth));
+  printf("[%s] \t %lf\n", name, CalculateDisparityErrorPercent(DisparityMap, GroudTruth));
   return 0;
 }

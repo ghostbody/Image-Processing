@@ -1,5 +1,6 @@
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -8,13 +9,21 @@
 using namespace std;
 using namespace cv;
 
-#define PATCH_H 7
-#define PATCH_W 7
+#define PATCH_H 5
+#define PATCH_W 5
 #define DISTANCE 79
 
 Mat CalculateDisparityAll(const Mat & LeftImage, const Mat & RightImage, int falg);
 int CalculateMinDistASW(const Mat & LeftImage, const Mat & RightImage, int x, int y, int flag);
 Mat CalculateCenterPatch(const Mat & M, int x, int y);
+
+double Eppd(const Mat & P, const Mat & Q, int d);
+
+double wpq(const Vec3b & p, const Vec3b & q, int d);
+
+double deltaCpq(const Vec3b & p, const Vec3b & q);
+double e0(const Vec3b & q, const Vec3b & qd);
+
 
 Mat CalculateDisparityAll(const Mat & LeftImage, const Mat & RightImage, int flag = 0) {
   Mat res(LeftImage.size(), CV_32S);
@@ -22,7 +31,7 @@ Mat CalculateDisparityAll(const Mat & LeftImage, const Mat & RightImage, int fla
     for(int j = 0; j < LeftImage.cols; j++) {
       int tempDisparityDistance = CalculateMinDistASW(LeftImage, RightImage, i, j, flag);
       res.at<int>(i, j) = tempDisparityDistance * 3;
-      printf("(%d,%d):%d, %d\n", i, j, tempDisparityDistance, res.at<int>(i, j));
+      // printf("(%d,%d):%d, %d\n", i, j, tempDisparityDistance, res.at<int>(i, j));
     }
   }
   return res;
@@ -30,13 +39,12 @@ Mat CalculateDisparityAll(const Mat & LeftImage, const Mat & RightImage, int fla
 
 int CalculateMinDistASW(const Mat & LeftImage, const Mat & RightImage, int x, int y, int flag) {
   int min_index = y;
-  int min;
+  double min;
   if(flag == 1) {
     Mat PatchP = CalculateCenterPatch(LeftImage, x, y);
     for(int i = y; i < RightImage.cols  && i < y + DISTANCE; i++) {
       Mat PatchQ = CalculateCenterPatch(RightImage, x, i);
-      // int disparity = CalculateDisparityASWOne(PatchP, PatchQ);
-      int disparity = 0;
+      double disparity = Eppd(PatchP, PatchQ, i - y);
       if(min > disparity || i == y) {
         min = disparity;
         min_index = i;
@@ -46,14 +54,12 @@ int CalculateMinDistASW(const Mat & LeftImage, const Mat & RightImage, int x, in
     Mat PatchP = CalculateCenterPatch(RightImage, x, y);
     for(int i = y; i >= 0 && i >= y - DISTANCE ; i--) {
       Mat PatchQ = CalculateCenterPatch(LeftImage, x, i);
-      // int disparity = CalculateDisparityASWOne(PatchP, PatchQ);
-      int disparity = 0;
+      double disparity = Eppd(PatchP, PatchQ, i - y);
       if(min > disparity || i == y) {
         min = disparity;
         min_index = i;
       }
     }
-    std::cout << PatchP << std::endl;
   }
 
   // return d
@@ -71,12 +77,56 @@ Mat CalculateCenterPatch(const Mat & M, int x, int y) {
           res.at<Vec3b>(i,j).val[k] = 0;
         } else {
           res.at<Vec3b>(i,j).val[k] = (M.at<Vec3b>(x - PATCH_H/2 + i, y - PATCH_W/2 + j))[k];
-          cout << (int)(res.at<Vec3b>(i,j).val[k]) << endl;
         }
       }
     }
   }
+
   return res;
+}
+
+double Eppd(const Mat & P, const Mat & Q, int d) {
+  Vec3b p = P.at<Vec3b>(P.rows / 2, P.cols / 2);
+  Vec3b pd = Q.at<Vec3b>(Q.rows / 2, Q.cols / 2);
+
+  double sum1 = 0;
+  double sum2 = 0;
+
+  for(int i = 0; i < P.rows; i++) {
+    for(int j = 0; j < P.cols; j++) {
+      sum1 += wpq(p, P.at<Vec3b>(i,j), d) * wpq(pd, Q.at<Vec3b>(i,j), d) * e0(P.at<Vec3b>(i,j), Q.at<Vec3b>(i,j));
+      sum2 += wpq(p, P.at<Vec3b>(i,j), d) * wpq(pd, Q.at<Vec3b>(i,j), d);
+    }
+  }
+  return sum2 != 0 ? sum1 / sum2 : 0;
+}
+
+double wpq(const Vec3b & p, const Vec3b & q, int d) {
+  double k = 100;
+  double gamac = 13;
+  double gamap = 31;
+  return k*exp(-(deltaCpq(p,q) / gamac + d / gamap));
+}
+
+// Lab space color difference calculation
+// double deltaCpq(const Vec3b & p, const Vec3b & q) {
+//   Vec3b pLab = p;
+//   Vec3b qLab = q;
+//   cv::cvtColor(p, pLab, CV_RGB2Lab);
+//   cv::cvtColor(p, qLab, CV_RGB2Lab);
+//   return sqrt((pLab[0] - qLab[0]) * (pLab[0] - qLab[0]) + (pLab[1] - qLab[1]) * (pLab[1] - qLab[1]) + (pLab[2] - qLab[2]) * (pLab[2] - qLab[2]));
+// }
+
+//RGB space color difference calculation
+double deltaCpq(const Vec3b & p, const Vec3b & q) {
+  const int wr = 1;
+  const int wg = 1;
+  const int wb = 1;
+  return sqrt(wr*(p[0] - q[0]) * (p[0] - q[0]) + wg*(p[1] - q[1]) * (p[1] - q[1]) + wb*(p[2] - q[2]) * (p[2] - q[2]));
+}
+
+double e0(const Vec3b & q, const Vec3b & qd) {
+  return abs(q[0] - qd[0]) + abs(q[1] - qd[1]) + abs(q[2] - qd[2]);
 }
 
 

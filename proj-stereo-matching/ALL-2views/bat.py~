@@ -20,7 +20,7 @@ def runEval():
 
 def main():
     os.system("make")
-    runRes()
+    #runRes()
     runEval()
 
 if __name__ == '__main__':

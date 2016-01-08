@@ -1,42 +1,42 @@
-[Baby2]the percentage of bad pixels: 8.868530
-[Baby2]the percentage of bad pixels: 10.626268
-[Plastic]the percentage of bad pixels: 37.009776
-[Plastic]the percentage of bad pixels: 35.796435
-[Lampshade1]the percentage of bad pixels: 16.965233
-[Lampshade1]the percentage of bad pixels: 15.950939
-[Wood1]the percentage of bad pixels: 15.755515
-[Wood1]the percentage of bad pixels: 16.294281
-[Cloth2]the percentage of bad pixels: 11.515511
-[Cloth2]the percentage of bad pixels: 14.000375
-[Bowling2]the percentage of bad pixels: 10.535050
-[Bowling2]the percentage of bad pixels: 10.221463
-[Midd1]the percentage of bad pixels: 19.661726
-[Midd1]the percentage of bad pixels: 19.815170
-[Cloth1]the percentage of bad pixels: 7.419146
-[Cloth1]the percentage of bad pixels: 6.727591
-[Aloe]the percentage of bad pixels: 8.144819
-[Aloe]the percentage of bad pixels: 9.458194
-[Monopoly]the percentage of bad pixels: 27.067903
-[Monopoly]the percentage of bad pixels: 23.282899
-[Cloth3]the percentage of bad pixels: 7.014713
-[Cloth3]the percentage of bad pixels: 6.338713
-[Baby1]the percentage of bad pixels: 10.943001
-[Baby1]the percentage of bad pixels: 10.480335
-[Rocks1]the percentage of bad pixels: 8.849603
-[Rocks1]the percentage of bad pixels: 7.917965
-[Lampshade2]the percentage of bad pixels: 24.089008
-[Lampshade2]the percentage of bad pixels: 23.936708
-[Flowerpots]the percentage of bad pixels: 6.671408
-[Flowerpots]the percentage of bad pixels: 8.627621
-[Midd2]the percentage of bad pixels: 20.495396
-[Midd2]the percentage of bad pixels: 21.411345
-[Baby3]the percentage of bad pixels: 12.676109
-[Baby3]the percentage of bad pixels: 12.789288
-[Cloth4]the percentage of bad pixels: 10.603583
-[Cloth4]the percentage of bad pixels: 10.538044
-[Bowling1]the percentage of bad pixels: 17.950612
-[Bowling1]the percentage of bad pixels: 19.360296
-[Rocks2]the percentage of bad pixels: 9.355803
-[Rocks2]the percentage of bad pixels: 8.801272
-[Wood2]the percentage of bad pixels: 18.744331
-[Wood2]the percentage of bad pixels: 17.688102
+[Baby2] 	 86.623912
+[Baby2] 	 86.485832
+[Plastic] 	 95.403489
+[Plastic] 	 95.960003
+[Lampshade1] 	 90.939392
+[Lampshade1] 	 90.484364
+[Wood1] 	 84.996747
+[Wood1] 	 85.702289
+[Cloth2] 	 85.989014
+[Cloth2] 	 86.743649
+[Bowling2] 	 88.971997
+[Bowling2] 	 89.059850
+[Midd1] 	 90.292357
+[Midd1] 	 91.058413
+[Cloth1] 	 77.970056
+[Cloth1] 	 77.347851
+[Aloe] 		 82.254573
+[Aloe] 	 	 82.334958
+[Monopoly] 	 91.509975
+[Monopoly] 	 91.359893
+[Cloth3] 	 80.191847
+[Cloth3] 	 79.908614
+[Baby1] 	 79.717950
+[Baby1] 	 79.548459
+[Rocks1] 	 80.377742
+[Rocks1] 	 80.512560
+[Lampshade2] 	 91.407528
+[Lampshade2] 	 91.998627
+[Flowerpots] 	 93.149236
+[Flowerpots] 	 93.285917
+[Midd2] 	 92.732997
+[Midd2] 	 92.919513
+[Baby3] 	 84.986084
+[Baby3] 	 84.874142
+[Cloth4] 	 81.736471
+[Cloth4] 	 82.141564
+[Bowling1] 	 92.239938
+[Bowling1] 	 92.373453
+[Rocks2] 	 82.866137
+[Rocks2] 	 82.267727
+[Wood2] 	 85.840323
+[Wood2] 	 85.942839

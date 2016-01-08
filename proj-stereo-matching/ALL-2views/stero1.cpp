@@ -23,7 +23,7 @@ Mat CalculateDisparityAll(const Mat & LeftImage, const Mat & RightImage, int fla
   Mat res(LeftImage.size(), CV_32S);
   for(int i = 0; i < LeftImage.rows; i++) {
     for(int j = 0; j < LeftImage.cols; j++) {
-      int tempDisparityDistance = CalculateMinDistNCC(LeftImage, RightImage, i, j, flag);
+      int tempDisparityDistance = CalculateMinDistSum(LeftImage, RightImage, i, j, flag);
       res.at<int>(i, j) = tempDisparityDistance * 3;
       //printf("(%d,%d):%d, %d\n", i, j, tempDisparityDistance, res.at<int>(i, j));
     }
