@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIP Final</title>
+<link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body><div class="container"><h2 id="dip-final-project-stero-matching">DIP Final Project : Stero Matching</h2>
+
+<p><br></p>
+
+
+
+<h3 id="basic-task">Basic Task</h3>
+
+<p><strong>1.Implement a test program to evaluate the quality of your disparity maps. Your program should output the percentage of bad pixels in each of your disparity maps, where bad pixels are those whose errors are greater than one when comparing to ground truths (without multiplication).</strong></p>
+
+<p>(You can see the implementation in the code evaluate.cpp) <br>
+Calculation Formula: <br>
+<script type="math/tex; mode=display" id="MathJax-Element-1">
+E(x,y) = {|D(x,y) - G(x,y)|} \ \  (G(x,y) != 0)
+</script></p>
+
+<p>(D(x,y) indicates a pixel in disparity map, G(x,y) indicates the corresponding pixel in GroundTruth, when G(x,y) = 0, the result is not defined)</p>
+
+<p>This program is used to evaluate the quality of the disparity map later with inputs(disparitymap, groundtruth) and output(bad_pixel_percentage) <br>
+This is an example of its output:</p>
+
+
+
+<pre class="prettyprint"><code class="language-c hljs ">[Rocks2]the percentage of bad pixels: <span class="hljs-number">9.355803</span>
+[Rocks2]the percentage of bad pixels: <span class="hljs-number">8.801272</span>
+[Wood2]the percentage of bad pixels: <span class="hljs-number">18.744331</span>
+[Wood2]the percentage of bad pixels: <span class="hljs-number">17.688102</span></code></pre>
+
+<p>The higher bad_pixel_percentage the disparity map has, the worse the disparity map is. So the best way for stero matching should be the way that result in a small bad percentage.</p>
+
+<p><strong>2. Implement a local stereo matching algorithm using “Sum of Squared Difference (SSD)” as matching cost. Compute both the left and the right disparity maps for all test cases, and visualize them by scaling their intensities by a factor of three. Save each disparity map to a file named testcasename disp1 SSD.png or testcasename disp5 SSD.png. Also write down the matching cost function and the quality of your disparity maps.</strong> <br>
+Matching cost function: <br>
+<script type="math/tex; mode=display" id="MathJax-Element-2">
+D(p,q) = \sum_{i,j\in P_p,Qq}(P_p(i,j) - Q_q(i,j))^2
+</script> <br>
+(P,Q indicates the patch in Left and Right)</p>
+
+<p>Experiment in patch size(5*5) <br>
+(You can see the result image in the SSD folder)</p>
+
+<p>Evaluating result:</p>
+
+
+
+<pre class="prettyprint"><code class="language-c hljs ">[Baby2]          <span class="hljs-number">86.623912</span>
+[Baby2]          <span class="hljs-number">86.485832</span>
+[Plastic]        <span class="hljs-number">95.403489</span>
+[Plastic]        <span class="hljs-number">95.960003</span>
+[Lampshade1]     <span class="hljs-number">90.939392</span>
+[Lampshade1]     <span class="hljs-number">90.484364</span>
+[Wood1]          <span class="hljs-number">84.996747</span>
+[Wood1]          <span class="hljs-number">85.702289</span>
+[Cloth2]         <span class="hljs-number">85.989014</span>
+[Cloth2]         <span class="hljs-number">86.743649</span>
+[Bowling2]       <span class="hljs-number">88.971997</span>
+[Bowling2]       <span class="hljs-number">89.059850</span>
+[Midd1]          <span class="hljs-number">90.292357</span>
+[Midd1]          <span class="hljs-number">91.058413</span>
+[Cloth1]         <span class="hljs-number">77.970056</span>
+[Cloth1]         <span class="hljs-number">77.347851</span>
+[Aloe]           <span class="hljs-number">82.254573</span>
+[Aloe]           <span class="hljs-number">82.334958</span>
+[Monopoly]       <span class="hljs-number">91.509975</span>
+[Monopoly]       <span class="hljs-number">91.359893</span>
+[Cloth3]         <span class="hljs-number">80.191847</span>
+[Cloth3]         <span class="hljs-number">79.908614</span>
+[Baby1]          <span class="hljs-number">79.717950</span>
+[Baby1]          <span class="hljs-number">79.548459</span>
+[Rocks1]         <span class="hljs-number">80.377742</span>
+[Rocks1]         <span class="hljs-number">80.512560</span>
+[Lampshade2]     <span class="hljs-number">91.407528</span>
+[Lampshade2]     <span class="hljs-number">91.998627</span>
+[Flowerpots]     <span class="hljs-number">93.149236</span>
+[Flowerpots]     <span class="hljs-number">93.285917</span>
+[Midd2]          <span class="hljs-number">92.732997</span>
+[Midd2]          <span class="hljs-number">92.919513</span>
+[Baby3]          <span class="hljs-number">84.986084</span>
+[Baby3]          <span class="hljs-number">84.874142</span>
+[Cloth4]         <span class="hljs-number">81.736471</span>
+[Cloth4]         <span class="hljs-number">82.141564</span>
+[Bowling1]       <span class="hljs-number">92.239938</span>
+[Bowling1]       <span class="hljs-number">92.373453</span>
+[Rocks2]         <span class="hljs-number">82.866137</span>
+[Rocks2]         <span class="hljs-number">82.267727</span>
+[Wood2]          <span class="hljs-number">85.840323</span>
+[Wood2]          <span class="hljs-number">85.942839</span></code></pre>
+
+<p><strong>3. Implement a local stereo matching algorithm using “Normalized Cross Correlation (NCC)” as matching cost. Visualize and save your estimated disparity maps to testcasename disp1 NCC.png or testcasename disp5 NCC.png. You are required to figure out the meaning of NCC by yourselves and write down the formula of the NCC matching cost. Also write down the quality of your disparity maps.</strong></p>
+
+<p>NCC explantion:</p>
+
+<blockquote>
+  <p>In signal processing, cross-correlation is a measure of similarity of two series as a function of the lag of one relative to the other. This is also known as a sliding dot product or sliding inner-product. It is commonly used for searching a long signal for a shorter, known feature. It has applications in pattern recognition, single particle analysis, electron tomography, averaging, cryptanalysis, and neurophysiology.</p>
+</blockquote>
+
+<p><em>From wikipedia</em></p>
+
+<p>As an example, consider two real valued functions f and g differing only by an unknown shift along the x-axis. One can use the cross-correlation to find how much g must be shifted along the x-axis to make it identical to f. The formula essentially slides the g function along the x-axis, calculating the integral of their product at each position. When the functions match, the value of (f\star g) is maximized. This is because when peaks (positive areas) are aligned, they make a large contribution to the integral. Similarly, when troughs (negative areas) align, they also make a positive contribution to the integral because the product of two negative numbers is positive.</p>
+
+<p>The Formula of NCC: <br>
+<script type="math/tex; mode=display" id="MathJax-Element-3">
+D(p,q) = \frac{1}{n}\cdot \sum_{i,j \in N_{pq}} \frac{(f_p(i,j)-\hat f_p)\cdot(g_q(i,j)-\hat g_q)}{\sigma f_p \sigma g_p}
+</script> <br>
+(f hat and g hat indicates the mean value of the window, and sigma means the variance of the window) <br>
+Notice that we are supposed to use max value according to the definition of NCC, i.e. <br>
+<script type="math/tex; mode=display" id="MathJax-Element-4">
+D(x,y) = arg_{d\in \{0...dmax\}}max(F,G)
+</script></p>
+
+<p>Evaluating result:</p>
+
+
+
+<pre class="prettyprint"><code class="language-c hljs ">[Baby2]          <span class="hljs-number">86.623912</span>
+[Baby2]          <span class="hljs-number">86.485832</span>
+[Plastic]        <span class="hljs-number">95.403489</span>
+[Plastic]        <span class="hljs-number">95.960003</span>
+[Lampshade1]     <span class="hljs-number">90.939392</span>
+[Lampshade1]     <span class="hljs-number">90.484364</span>
+[Wood1]          <span class="hljs-number">84.996747</span>
+[Wood1]          <span class="hljs-number">85.702289</span>
+[Cloth2]         <span class="hljs-number">85.989014</span>
+[Cloth2]         <span class="hljs-number">86.743649</span>
+[Bowling2]       <span class="hljs-number">88.971997</span>
+[Bowling2]       <span class="hljs-number">89.059850</span>
+[Midd1]          <span class="hljs-number">90.292357</span>
+[Midd1]          <span class="hljs-number">91.058413</span>
+[Cloth1]         <span class="hljs-number">77.970056</span>
+[Cloth1]         <span class="hljs-number">77.347851</span>
+[Aloe]           <span class="hljs-number">82.254573</span>
+[Aloe]           <span class="hljs-number">82.334958</span>
+[Monopoly]       <span class="hljs-number">91.509975</span>
+[Monopoly]       <span class="hljs-number">91.359893</span>
+[Cloth3]         <span class="hljs-number">80.191847</span>
+[Cloth3]         <span class="hljs-number">79.908614</span>
+[Baby1]          <span class="hljs-number">79.717950</span>
+[Baby1]          <span class="hljs-number">79.548459</span>
+[Rocks1]         <span class="hljs-number">80.377742</span>
+[Rocks1]         <span class="hljs-number">80.512560</span>
+[Lampshade2]     <span class="hljs-number">91.407528</span>
+[Lampshade2]     <span class="hljs-number">91.998627</span>
+[Flowerpots]     <span class="hljs-number">93.149236</span>
+[Flowerpots]     <span class="hljs-number">93.285917</span>
+[Midd2]          <span class="hljs-number">92.732997</span>
+[Midd2]          <span class="hljs-number">92.919513</span>
+[Baby3]          <span class="hljs-number">84.986084</span>
+[Baby3]          <span class="hljs-number">84.874142</span>
+[Cloth4]         <span class="hljs-number">81.736471</span>
+[Cloth4]         <span class="hljs-number">82.141564</span>
+[Bowling1]       <span class="hljs-number">92.239938</span>
+[Bowling1]       <span class="hljs-number">92.373453</span>
+[Rocks2]         <span class="hljs-number">82.866137</span>
+[Rocks2]         <span class="hljs-number">82.267727</span>
+[Wood2]          <span class="hljs-number">85.840323</span>
+[Wood2]          <span class="hljs-number">85.942839</span>
+</code></pre>
+
+<p><strong>Add a small constant amount of intensity (e.g. 10) to all right eye images, and re-run the above two methods. Analyze how the intensity change affects the results (i.e. the quality) of the two methods. Explain in which ways that NCC is a better matching cost than SSD.</strong></p>
+
+<p>In my experiment, if add a small constant of intensity to the image, both NCC and SSD’s disparity map will result in worse result. Specially, the SSD’s disparity map will result even worse than NCC. SSD’s disparity map loss its basic profile but NCC reserved.(see the result in CNCC and CSSD)</p>
+
+<p>SSD add constant 10 result</p>
+
+
+
+<pre class="prettyprint"><code class="language-c hljs ">[Baby2]          <span class="hljs-number">89.896604</span>
+[Baby2]          <span class="hljs-number">85.593220</span>
+[Plastic]        <span class="hljs-number">88.304262</span>
+[Plastic]        <span class="hljs-number">86.158073</span>
+[Lampshade1]     <span class="hljs-number">84.219462</span>
+[Lampshade1]     <span class="hljs-number">73.606516</span>
+[Wood1]          <span class="hljs-number">88.854456</span>
+[Wood1]          <span class="hljs-number">91.019575</span>
+[Cloth2]         <span class="hljs-number">94.607702</span>
+[Cloth2]         <span class="hljs-number">91.513014</span>
+[Bowling2]       <span class="hljs-number">84.290159</span>
+[Bowling2]       <span class="hljs-number">79.769386</span>
+[Midd1]          <span class="hljs-number">83.192677</span>
+[Midd1]          <span class="hljs-number">72.415577</span>
+[Cloth1]         <span class="hljs-number">97.745803</span>
+[Cloth1]         <span class="hljs-number">95.213559</span>
+[Aloe]           <span class="hljs-number">93.188176</span>
+[Aloe]           <span class="hljs-number">94.152794</span>
+[Monopoly]       <span class="hljs-number">96.091758</span>
+[Monopoly]       <span class="hljs-number">90.593618</span>
+[Cloth3]         <span class="hljs-number">94.215438</span>
+[Cloth3]         <span class="hljs-number">89.472422</span>
+[Baby1]          <span class="hljs-number">94.743799</span>
+[Baby1]          <span class="hljs-number">91.389961</span>
+[Rocks1]         <span class="hljs-number">94.054690</span>
+[Rocks1]         <span class="hljs-number">90.436248</span>
+[Lampshade2]     <span class="hljs-number">83.931090</span>
+[Lampshade2]     <span class="hljs-number">72.315711</span>
+[Flowerpots]     <span class="hljs-number">73.113365</span>
+[Flowerpots]     <span class="hljs-number">70.875750</span>
+[Midd2]          <span class="hljs-number">81.773686</span>
+[Midd2]          <span class="hljs-number">71.585982</span>
+[Baby3]          <span class="hljs-number">88.570103</span>
+[Baby3]          <span class="hljs-number">86.137052</span>
+[Cloth4]         <span class="hljs-number">95.223769</span>
+[Cloth4]         <span class="hljs-number">92.755758</span>
+[Bowling1]       <span class="hljs-number">83.129820</span>
+[Bowling1]       <span class="hljs-number">76.843606</span>
+[Rocks2]         <span class="hljs-number">95.115421</span>
+[Rocks2]         <span class="hljs-number">92.391097</span>
+[Wood2]          <span class="hljs-number">92.915191</span>
+[Wood2]          <span class="hljs-number">92.140416</span>
+</code></pre>
+
+<p>NCC  add constant 10</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs json">[Baby2]          <span class="hljs-number">87.540082</span>
+[Baby2]          <span class="hljs-number">20.133499</span>
+[Plastic]        <span class="hljs-number">71.748131</span>
+[Plastic]        <span class="hljs-number">25.738930</span>
+[Lampshade1]     <span class="hljs-number">71.480557</span>
+[Lampshade1]     <span class="hljs-number">16.047063</span>
+[Wood1]          <span class="hljs-number">90.974037</span>
+[Wood1]          <span class="hljs-number">22.077000</span>
+[Cloth2]         <span class="hljs-number">94.617065</span>
+[Cloth2]         <span class="hljs-number">20.848262</span>
+[Bowling2]       <span class="hljs-number">79.796230</span>
+[Bowling2]       <span class="hljs-number">31.101214</span>
+[Midd1]          <span class="hljs-number">67.438535</span>
+[Midd1]          <span class="hljs-number">29.808777</span>
+[Cloth1]         <span class="hljs-number">85.013935</span>
+[Cloth1]         <span class="hljs-number">11.200985</span>
+[Aloe]           <span class="hljs-number">90.169631</span>
+[Aloe]           <span class="hljs-number">18.427116</span>
+[Monopoly]       <span class="hljs-number">92.618510</span>
+[Monopoly]       <span class="hljs-number">37.651150</span>
+[Cloth3]         <span class="hljs-number">93.256854</span>
+[Cloth3]         <span class="hljs-number">41.552272</span>
+[Baby1]          <span class="hljs-number">86.632419</span>
+[Baby1]          <span class="hljs-number">15.481971</span>
+[Rocks1]         <span class="hljs-number">93.103975</span>
+[Rocks1]         <span class="hljs-number">44.372019</span>
+[Lampshade2]     <span class="hljs-number">65.176955</span>
+[Lampshade2]     <span class="hljs-number">12.695837</span>
+[Flowerpots]     <span class="hljs-number">90.497866</span>
+[Flowerpots]     <span class="hljs-number">47.730843</span>
+[Midd2]          <span class="hljs-number">66.247104</span>
+[Midd2]          <span class="hljs-number">30.431838</span>
+[Baby3]          <span class="hljs-number">88.249119</span>
+[Baby3]          <span class="hljs-number">33.716989</span>
+[Cloth4]         <span class="hljs-number">91.010549</span>
+[Cloth4]         <span class="hljs-number">15.795518</span>
+[Bowling1]       <span class="hljs-number">61.824486</span>
+[Bowling1]       <span class="hljs-number">17.068507</span>
+[Rocks2]         <span class="hljs-number">93.700477</span>
+[Rocks2]         <span class="hljs-number">37.656598</span>
+[Wood2]          <span class="hljs-number">67.785648</span>
+[Wood2]          <span class="hljs-number">11.588071</span></code></pre>
+
+<blockquote>
+  <p>SSD method has a higher computational complexity compared to SAD algorithm as it involves numerous multiplication operations. Normally, two areas which consist of exactly the same pixel values would yield a score of zero. However, these measures will no longer yield the correct results in the case of radiometric distortion, i.e., <strong>where the pixel values in one image differ from those in the other image by a constant offset and/or gain factor. </strong> <br>
+  … <br>
+  NCC algorithm is robust to the linear variation in the brightness due to different illumination conditions to the cameras. But it can be seen that due to more complex calculations of division, multiplication and square root its computational time is more than SAD, SSD. Hence it could only be used for real time application only if we are able to develop more efficient algorithm to speed up matching process. </p>
+</blockquote>
+
+<p><em>From Papper :Comparison of Various Stereo Vision Cost Aggregation Methods</em></p>
+
+<p>In a word, NCC perform better than SSD when one image differ from those in the other image by a constant offset but cost more time.</p>
+
+<p><strong>5.Cost aggregation using Adaptive Support Weight (ASW) is a powerful local stereo approach. You are required to implement this approach described in the CVPR’05 paper “Locally Adaptive Support-Weight Approach for Visual Correspondence Search” (to save time you are recommended to read mainly sec. 2.6 and sec. 3 of the paper). Visualize and save your estimated disparity maps to testcasename disp1 ASW.png or testcasename disp5 ASW.png. Also write down the quality of your disparity maps. Note that this algorithm is in general a bit slow.</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs json">[Baby2]          <span class="hljs-number">20.133499</span>
+[Plastic]        <span class="hljs-number">25.738930</span>
+[Lampshade1]     <span class="hljs-number">16.047063</span>
+[Wood1]          <span class="hljs-number">22.077000</span>
+[Cloth2]         <span class="hljs-number">20.848262</span>
+[Bowling2]       <span class="hljs-number">31.101214</span>
+[Midd1]          <span class="hljs-number">29.808777</span>
+[Cloth1]         <span class="hljs-number">11.200985</span>
+[Aloe]           <span class="hljs-number">18.427116</span>
+[Monopoly]       <span class="hljs-number">37.651150</span>
+[Cloth3]         <span class="hljs-number">41.552272</span>
+[Baby1]          <span class="hljs-number">15.481971</span>
+[Rocks1]         <span class="hljs-number">44.372019</span>
+[Lampshade2]     <span class="hljs-number">12.695837</span>
+[Flowerpots]     <span class="hljs-number">47.730843</span>
+[Midd2]          <span class="hljs-number">30.431838</span>
+[Baby3]          <span class="hljs-number">33.716989</span>
+[Cloth4]         <span class="hljs-number">15.795518</span>
+[Bowling1]       <span class="hljs-number">17.068507</span>
+[Rocks2]         <span class="hljs-number">37.656598</span>
+[Wood2]          <span class="hljs-number">11.588071</span></code></pre>
+
+<p><strong>6.6. Explain the idea of the ASW paper in question 5. Also explain in which ways ASW is better than NCC. Why?</strong> <br>
+The core idea of ASW(Adaptive Support-Weight Approach) is to give a weight value to each pixel in the matching window, which is based on the color difference and the distance between them and the center point of the window. In essence, an approximate image segmentation is completed.</p>
+
+<p>According to the like between location and color difference of window in the original pixel cost Fu to different weighting, and to perform polymerization. Many studies show that the algorithm is all local stereo matching effect is the best, and the result of matching algorithm and the optimization results compared. But the algorithm of adaptive weighted algorithm is relatively slow, and the complexity of the algorithm is relatively high, and the weight of the storage space is very large.</p>
+
+<p>ASW is better than NCC, but NCC is very slow. In the case that the images are colorful(3 channels), ASW is good. But for gray images, ASW are not necessary because color images do not have the definition of color difference(cq).</p>
+
+
+
+<h3 id="implementation-details">implementation details</h3>
+
+<p>Code sturcture:</p>
+
+
+
+<pre class="prettyprint"><code class="language-c hljs ">bat.py <span class="hljs-preprocessor">#the program to process all the images</span>
+stero0.cpp <span class="hljs-preprocessor">#the program to process SSD and NCC</span>
+stero1.cpp <span class="hljs-preprocessor">#the program to process CNCC and CSSD</span>
+stero2.cpp <span class="hljs-preprocessor">#the program to process ASW</span></code></pre>
+
+<p>For basic SSD and NCC and also ASW, the main algorithm is as follow: <br>
+1. Read the image into memory <br>
+2. Traversal the image, process each point and calculate d for the destination image. <br>
+    2.1. for each of the point, calculate a patch from the left(right) image and then travel from 0 - dmax and calculate another patch from the right(left) image. <br>
+    2.2 use the setting patch to calculate match cost and then choose the best match cost to be arg d. <br>
+3. Save the image</p>
+
+<p>For SSD: <br>
+The matching cost image is calculate by the following fomula: <br>
+<script type="math/tex; mode=display" id="MathJax-Element-5">
+C(x,y) = \sum_{i,j\in N}(N_p(i,j) - N_q(i,j))^2
+</script> <br>
+i.e. sum the absolute square value of the corresponding patches.</p>
+
+
+
+<pre class="prettyprint"><code class="language-c hljs ">  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; P.rows; i++) {
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; P.cols; j++) {
+      <span class="hljs-keyword">int</span> difference = P.at&lt;<span class="hljs-keyword">int</span>&gt;(i,j) - Q.at&lt;<span class="hljs-keyword">int</span>&gt;(i,j);
+      sum += difference * difference;
+    }
+  }
+</code></pre>
+
+<p>For NCC: <br>
+<script type="math/tex; mode=display" id="MathJax-Element-6">
+D(p,q) = \frac{1}{n}\cdot \sum_{i,j \in N_{pq}} \frac{(f_p(i,j)-\hat f_p)\cdot(g_q(i,j)-\hat g_q)}{\sigma f_p \sigma g_p}
+</script></p>
+
+<p>For ASW:(it will be more diffcult) <br>
+In the paper, we can conclude the several formulas: <br>
+Matching Value: <br>
+<script type="math/tex" id="MathJax-Element-7">d_p = arg_{d \in \{d_{min}....d_{max}\}}</script>E(p,pd) <br>
+Matching Cost: <br>
+<script type="math/tex" id="MathJax-Element-8">E(p,pd) = \frac{\sum_{q \in W}w(p,q)w(p_d,q_d)e_0(q,qd)}{\sum_{q\in W}w(p,q)w(pd,qd)}</script></p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-keyword">double</span> Eppd(<span class="hljs-keyword">const</span> Mat &amp; P, <span class="hljs-keyword">const</span> Mat &amp; Q, <span class="hljs-keyword">int</span> d) {
+  Vec3b p = P.at&lt;Vec3b&gt;(P.rows / <span class="hljs-number">2</span>, P.cols / <span class="hljs-number">2</span>);
+  Vec3b pd = Q.at&lt;Vec3b&gt;(Q.rows / <span class="hljs-number">2</span>, Q.cols / <span class="hljs-number">2</span>);
+
+  <span class="hljs-keyword">double</span> sum1 = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">double</span> sum2 = <span class="hljs-number">0</span>;
+
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; P.rows; i++) {
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; P.cols; j++) {
+      sum1 += wpq(p, P.at&lt;Vec3b&gt;(i,j), d) * wpq(pd, Q.at&lt;Vec3b&gt;(i,j), d) * e0(P.at&lt;Vec3b&gt;(i,j), Q.at&lt;Vec3b&gt;(i,j));
+      sum2 += wpq(p, P.at&lt;Vec3b&gt;(i,j), d) * wpq(pd, Q.at&lt;Vec3b&gt;(i,j), d);
+    }
+  }
+  <span class="hljs-keyword">return</span> sum2 != <span class="hljs-number">0</span> ? sum1 / sum2 : <span class="hljs-number">0</span>;
+}</code></pre>
+
+<p>Adptive Weight: <br>
+<script type="math/tex" id="MathJax-Element-9">w(p,q)=k\cdot exp(-(\frac{\Delta cpq}{\gamma c} + \frac{\Delta gpq}{\gamma p}))</script></p>
+
+
+
+<pre class="prettyprint"><code class="language-c hljs "><span class="hljs-keyword">double</span> wpq(<span class="hljs-keyword">const</span> Vec3b &amp; p, <span class="hljs-keyword">const</span> Vec3b &amp; q, <span class="hljs-keyword">int</span> d) {
+  <span class="hljs-keyword">double</span> k = <span class="hljs-number">100</span>;
+  <span class="hljs-keyword">double</span> gamac = <span class="hljs-number">40</span>;
+  <span class="hljs-keyword">double</span> gamap = <span class="hljs-number">7</span>;
+  <span class="hljs-keyword">return</span> k*<span class="hljs-built_in">exp</span>(-(deltaCpq(p,q) / gamac + d / gamap));
+}</code></pre>
+
+<p>Error modification: <br>
+<script type="math/tex" id="MathJax-Element-10">e0(q,qd) = \sum_{c \in \{R,G,B\}}|I_c(q)-I_c(qd)|</script></p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-keyword">double</span> e0(<span class="hljs-keyword">const</span> Vec3b &amp; q, <span class="hljs-keyword">const</span> Vec3b &amp; qd) {
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">abs</span>(q[<span class="hljs-number">0</span>] - qd[<span class="hljs-number">0</span>]) + <span class="hljs-built_in">abs</span>(q[<span class="hljs-number">1</span>] - qd[<span class="hljs-number">1</span>]) + <span class="hljs-built_in">abs</span>(q[<span class="hljs-number">2</span>] - qd[<span class="hljs-number">2</span>]);
+}</code></pre>
+
+<p>Color difference: <br>
+RGB calculation: <br>
+<script type="math/tex" id="MathJax-Element-11">C_{pq} = \sqrt{\omega_r(p_R-q_R)^2+\omega_g(p_G-q_G)^2+\omega_b(p_B-q_B)^2}</script> <br>
+with(<script type="math/tex" id="MathJax-Element-12">(\omega_r,\omega_g,\omega_b)=(3,4,2)</script>) <br>
+Lab calculation: <br>
+<script type="math/tex" id="MathJax-Element-13">C_{pq} = \sqrt{(L_1^*-L_2^*)^2+(a_1-a2)^2+(c_1-c_2)^2}</script></p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-comment">// Lab space color difference calculation</span>
+<span class="hljs-keyword">double</span> deltaCpq(<span class="hljs-keyword">const</span> Vec3b &amp; p, <span class="hljs-keyword">const</span> Vec3b &amp; q) {
+  <span class="hljs-keyword">double</span> pXYZ[<span class="hljs-number">3</span>] = {<span class="hljs-number">0</span>};
+  <span class="hljs-keyword">double</span> qXYZ[<span class="hljs-number">3</span>] = {<span class="hljs-number">0</span>};
+  <span class="hljs-keyword">double</span> pLab[<span class="hljs-number">3</span>] = {<span class="hljs-number">0</span>};
+  <span class="hljs-keyword">double</span> qLab[<span class="hljs-number">3</span>] = {<span class="hljs-number">0</span>};
+
+  pXYZ[<span class="hljs-number">0</span>] = p[<span class="hljs-number">0</span>] * <span class="hljs-number">0.4124</span> + p[<span class="hljs-number">1</span>] * <span class="hljs-number">0.3576</span> + p[<span class="hljs-number">2</span>] * <span class="hljs-number">0.1805</span>;
+  pXYZ[<span class="hljs-number">1</span>] = p[<span class="hljs-number">0</span>] * <span class="hljs-number">0.2126</span> + p[<span class="hljs-number">1</span>] * <span class="hljs-number">0.7152</span> + p[<span class="hljs-number">2</span>] * <span class="hljs-number">0.0722</span>;
+  pXYZ[<span class="hljs-number">2</span>] = p[<span class="hljs-number">0</span>] * <span class="hljs-number">0.0193</span> + p[<span class="hljs-number">1</span>] * <span class="hljs-number">0.1192</span> + p[<span class="hljs-number">2</span>] * <span class="hljs-number">0.9505</span>;
+
+  qXYZ[<span class="hljs-number">0</span>] = q[<span class="hljs-number">0</span>] * <span class="hljs-number">0.4124</span> + q[<span class="hljs-number">1</span>] * <span class="hljs-number">0.3576</span> + q[<span class="hljs-number">2</span>] * <span class="hljs-number">0.1805</span>;
+  qXYZ[<span class="hljs-number">1</span>] = q[<span class="hljs-number">0</span>] * <span class="hljs-number">0.2126</span> + q[<span class="hljs-number">1</span>] * <span class="hljs-number">0.7152</span> + q[<span class="hljs-number">2</span>] * <span class="hljs-number">0.0722</span>;
+  qXYZ[<span class="hljs-number">2</span>] = q[<span class="hljs-number">0</span>] * <span class="hljs-number">0.0193</span> + q[<span class="hljs-number">1</span>] * <span class="hljs-number">0.1192</span> + q[<span class="hljs-number">2</span>] * <span class="hljs-number">0.9505</span>;
+
+  <span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> Xn = <span class="hljs-number">95.047</span>;
+  <span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> Yn = <span class="hljs-number">100.0</span>;
+  <span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> Zn = <span class="hljs-number">108.883</span>;
+
+  qLab[<span class="hljs-number">0</span>] = <span class="hljs-number">116</span> * f(qXYZ[<span class="hljs-number">1</span>] / Yn) - <span class="hljs-number">16</span>;
+  qLab[<span class="hljs-number">1</span>] = <span class="hljs-number">500</span> * (f(qXYZ[<span class="hljs-number">0</span>]) / Xn - (f(qXYZ[<span class="hljs-number">1</span>]) / Yn));
+  qLab[<span class="hljs-number">2</span>] = <span class="hljs-number">200</span> * (f(qXYZ[<span class="hljs-number">1</span>]) / Yn - (f(qXYZ[<span class="hljs-number">2</span>]) / Zn));
+
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">sqrt</span>((pLab[<span class="hljs-number">0</span>] - qLab[<span class="hljs-number">0</span>]) * (pLab[<span class="hljs-number">0</span>] - qLab[<span class="hljs-number">0</span>]) + (pLab[<span class="hljs-number">1</span>] - qLab[<span class="hljs-number">1</span>]) * (pLab[<span class="hljs-number">1</span>] - qLab[<span class="hljs-number">1</span>]) + (pLab[<span class="hljs-number">2</span>] - qLab[<span class="hljs-number">2</span>]) * (pLab[<span class="hljs-number">2</span>] - qLab[<span class="hljs-number">2</span>]));
+}
+
+<span class="hljs-comment">//RGB space color difference calculation</span>
+ <span class="hljs-keyword">double</span> deltaCpq(<span class="hljs-keyword">const</span> Vec3b &amp; p, <span class="hljs-keyword">const</span> Vec3b &amp; q) {
+   <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> wr = <span class="hljs-number">3</span>;
+   <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> wg = <span class="hljs-number">4</span>;
+   <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> wb = <span class="hljs-number">2</span>;
+   <span class="hljs-keyword">return</span> <span class="hljs-built_in">sqrt</span>(wr*(p[<span class="hljs-number">0</span>] - q[<span class="hljs-number">0</span>]) * (p[<span class="hljs-number">0</span>] - q[<span class="hljs-number">0</span>]) + wg*(p[<span class="hljs-number">1</span>] - q[<span class="hljs-number">1</span>]) * (p[<span class="hljs-number">1</span>] - q[<span class="hljs-number">1</span>]) + wb*(p[<span class="hljs-number">2</span>] - q[<span class="hljs-number">2</span>]) * (p[<span class="hljs-number">2</span>] - q[<span class="hljs-number">2</span>]));
+ }</code></pre>
+
+
+
+<h3 id="discussions-of-the-disadvantages-of-the-paper">discussions of the disadvantages of the paper</h3>
+
+
+
+<h4 id="advantages">Advantages:</h4>
+
+<ol>
+<li>The matching method can make a better result than both SSD and NCC. It can use a detail method to define the matching cost in a good way. Using the definition of color difference and the “adptive weight” is truly a good approach.</li>
+<li>It’s a landmark works in local stereo matching algorithm(maybe but i think it’s not good, maybe it’s my problem). From CVPR and PAMI you can see its component. AdaptiveWeight method has been proposed, formally declared in the matching accuracy, the adaptive Adaptive out algorithm (Window)(This method is unscientific at all i think). And later became popular.</li>
+</ol>
+
+
+
+<h3 id="disadvantage">Disadvantage:</h3>
+
+<ol>
+<li>Too many formulas :&lt;. They are supposed to give an example program but didn’t. :&lt;</li>
+<li>The algorithm is so slow that i can not stand it, and my computer can not afford a argument of window size of 33. :&lt;</li>
+<li>Locally approach can not do as well as global one. But there is so many projects for me to finish, i do not have time to do it. :&lt;</li>
+</ol>
+
+
+
+<h3 id="conclusion">Conclusion:</h3>
+
+<p>This project is in fact very boring and seems that it’s irrelevant to what we have learnt. I have many unsolved questions: <br>
+1. Why my program is so slow(not a bit slow)? How can I improve it? <br>
+I used python as program language for the last 4 homework project. But this time i use c++ for programming, I think it should be quicker because c++ is a basic high level language and is known to be 10 times faster than python. But thep processing speed is stiil very slow. <br>
+2. Why my picture is so ugly compare to the ground truth? <br>
+Many of my fellows also have this problem that the output image is very ugly compare to the groud truth, especially for the edge of the image. We check it for several times and discuss it for a better way but failed. We try to ask TA for help, but no responds :&lt;. We also ask professor Chao for help but she tells us to ask TA for help. <br>
+3. How to calculate the error pixels since the error rate in the paper is less than 5% when window size is set to 5, but my error rate is greater than 70% for average? <br>
+We should calculate absolute error in the paper that error &lt; 1. But, the error rate is so high. I also ignore a border of 10 in the image but also very high. <br>
+In a word, we have still some problems. My be we can do better with more time. :&lt;</p></div></body>
+</html>
