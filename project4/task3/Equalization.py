@@ -82,7 +82,7 @@ def get_hist_image(hist):
     return img
 
 if __name__ == '__main__':
-    img = cv2.imread("./14.png")
+    img = cv2.imread("./me.jpg")
 
     output1 = equalize_hist(img)
     cv2.imwrite("output1.png", output1)
